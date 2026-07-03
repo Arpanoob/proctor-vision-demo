@@ -29,6 +29,7 @@ export default function Home() {
   });
   const [prolongedS, setProlongedS] = useState(5);
   const [debug, setDebug] = useState(false);
+  const [showPanel, setShowPanel] = useState(true);
   const overlayRef = useRef<HTMLCanvasElement | null>(null);
 
   const config: ProctorConfig = useMemo(() => ({
@@ -47,6 +48,11 @@ export default function Home() {
 
   // Push config changes to the running engine live.
   useEffect(() => { configure(config); }, [config, configure]);
+
+  // Collapse the settings panel by default on small screens (it covers the video).
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth <= 720) setShowPanel(false);
+  }, []);
 
   // Debug mesh overlay
   useEffect(() => {
@@ -87,8 +93,13 @@ export default function Home() {
       <div style={{ position: "fixed", top: 0, left: 0, right: 0, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 22px", zIndex: 5 }}>
         <a href="/" style={{ fontWeight: 700 }}>← proctor-vision <span style={{ opacity: .6, fontWeight: 500 }}>· live demo</span></a>
         <span style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <button onClick={() => setShowPanel((v) => !v)} title="Toggle detector settings"
+            style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, cursor: "pointer", color: "#fff",
+              background: showPanel ? "rgba(124,92,255,.25)" : "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.18)", borderRadius: 8, padding: "6px 10px" }}>
+            ⚙ <span className="tog-label">Detectors</span>
+          </button>
           <label style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-            <input type="checkbox" checked={debug} onChange={(e) => setDebug(e.target.checked)} /> Debug mesh
+            <input type="checkbox" checked={debug} onChange={(e) => setDebug(e.target.checked)} /> <span className="tog-label">Debug mesh</span>
           </label>
           <span style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
             background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.18)",
@@ -128,6 +139,7 @@ export default function Home() {
       </div>
 
       {/* Per-feature control panel: enable + sensitivity for EVERY detector */}
+      {showPanel && (
       <div className="demo-panel" style={{ position: "fixed", top: 62, right: 22, zIndex: 7, width: 300, background: "rgba(16,18,28,.92)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,.14)", borderRadius: 12, padding: 14, fontSize: 12.5, maxHeight: "82vh", overflowY: "auto" }}>
         <div style={{ textTransform: "uppercase", letterSpacing: ".6px", opacity: .6, fontSize: 11, marginBottom: 8 }}>Detectors — enable + sensitivity</div>
         {FEATURES.map(({ key, label }) => (
@@ -167,6 +179,7 @@ export default function Home() {
           ))}
         </div>
       </div>
+      )}
 
       {error && <div style={{ position: "fixed", bottom: 90, left: "50%", transform: "translateX(-50%)", zIndex: 8, background: "#f85149", color: "#fff", padding: "8px 16px", borderRadius: 8 }}>Camera error: {error}</div>}
     </main>

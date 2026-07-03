@@ -119,5 +119,6 @@ aside nav a:hover, aside a:hover { color: var(--iris) !important; }
     width: auto !important; max-height: 46vh !important;
   }
   .demo-ai { display: none !important; }   /* declutter the small video */
+  .tog-label { display: none; }            /* icons/checkboxes only on the top bar */
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
