@@ -26,7 +26,7 @@ export default function Landing() {
 
       {/* HERO — the technology is the thesis */}
       <header style={{ position: "relative", overflow: "hidden", borderBottom: "1px solid var(--line)" }}>
-        <div className="wrap" style={{ display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: 40, alignItems: "center", minHeight: "min(680px, 82vh)", padding: "56px 24px" }}>
+        <div className="wrap hero-grid">
           <div>
             <span className="eyebrow">client-side · no server video</span>
             <h1 style={{ fontSize: "clamp(38px, 6vw, 64px)", margin: "18px 0 20px" }}>
@@ -45,7 +45,7 @@ export default function Landing() {
               <pre><span className="tok-com"># install</span>{"\n"}<span className="mono">{INSTALL}</span></pre>
             </div>
           </div>
-          <div style={{ position: "relative", height: "min(560px, 70vh)" }}>
+          <div className="hero-mesh">
             <GazeMesh />
             <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".12em", color: "var(--muted)" }}>
               gaze · head-pose · presence
@@ -96,7 +96,7 @@ export default function Landing() {
 
       {/* INTEGRATION */}
       <section>
-        <div className="wrap" style={{ display: "grid", gridTemplateColumns: "0.85fr 1.15fr", gap: 40, alignItems: "center" }}>
+        <div className="wrap split">
           <div className="section-head" style={{ marginBottom: 0 }}>
             <span className="eyebrow">Integration</span>
             <h2>Five lines to live.</h2>

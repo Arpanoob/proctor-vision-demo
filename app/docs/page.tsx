@@ -14,9 +14,9 @@ export default function Docs() {
   return (
     <>
       <Nav />
-      <div className="wrap" style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: 48, padding: "48px 24px", alignItems: "start" }}>
+      <div className="wrap docs-grid">
         {/* sidebar */}
-        <aside style={{ position: "sticky", top: 84, fontSize: 14 }}>
+        <aside className="docs-side">
           <div className="eyebrow" style={{ marginBottom: 14 }}>Documentation</div>
           <nav style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {NAV.map(([id, label]) => (

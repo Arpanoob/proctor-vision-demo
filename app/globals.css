@@ -87,12 +87,37 @@ aside nav a:hover, aside a:hover { color: var(--iris) !important; }
 .tbl td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--text); }
 .tbl td:first-child { font-family: var(--font-mono); font-size: 13px; color: var(--iris); white-space: nowrap; }
 
+/* responsive layout containers (classes, not fragile inline overrides) */
+.hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; min-height: min(680px, 82vh); padding: 56px 24px; }
+.hero-mesh { position: relative; height: min(560px, 70vh); }
+.split { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 40px; align-items: center; }
+.docs-grid { display: grid; grid-template-columns: 220px 1fr; gap: 48px; padding: 48px 24px; align-items: start; }
+.docs-side { position: sticky; top: 84px; font-size: 14px; }
+
 @media (max-width: 900px) {
-  header .wrap { grid-template-columns: 1fr !important; }
-  header .wrap > div:last-child { display: none; }
-  .wrap.docs-grid, .docs + * { }
+  .hero-grid { grid-template-columns: 1fr; min-height: auto; padding: 40px 20px; gap: 8px; }
+  .hero-mesh { height: 300px; order: -1; }         /* show the mesh above the copy on mobile */
+  .split { grid-template-columns: 1fr; }
+  section { padding: 64px 0; }
 }
-@media (max-width: 860px) { section { padding: 64px 0; } .nav-links .hide-sm { display: none; }
-  section .wrap[style*="grid"] { grid-template-columns: 1fr !important; } }
-@media (max-width: 760px) { .docs-layout { grid-template-columns: 1fr !important; } }
+@media (max-width: 760px) {
+  .docs-grid { grid-template-columns: 1fr; padding: 32px 20px; gap: 24px; }
+  .docs-side { position: static; top: auto; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+  .docs-side nav { flex-direction: row !important; flex-wrap: wrap; gap: 8px 18px !important; }
+  .tbl { display: block; overflow-x: auto; white-space: nowrap; }
+}
+@media (max-width: 620px) {
+  .nav-links { gap: 16px; }
+  .nav-links .hide-sm { display: none; }
+  h1 { font-size: clamp(30px, 9vw, 44px) !important; }
+  .wrap { padding: 0 18px; }
+}
+/* demo screen — the fixed panels need to reflow on phones */
+@media (max-width: 720px) {
+  .demo-panel {
+    top: auto !important; right: 8px !important; left: 8px !important; bottom: 92px !important;
+    width: auto !important; max-height: 46vh !important;
+  }
+  .demo-ai { display: none !important; }   /* declutter the small video */
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

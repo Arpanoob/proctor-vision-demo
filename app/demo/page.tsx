@@ -102,7 +102,7 @@ export default function Home() {
       {prolonged && <div style={{ position: "fixed", top: 64, left: "50%", transform: "translateX(-50%)", zIndex: 7, background: "rgba(248,81,73,.95)", color: "#fff", fontWeight: 800, padding: "10px 20px", borderRadius: 10 }}>⚠ {prolonged}</div>}
       {toast && !prolonged && <div style={{ position: "fixed", top: 64, left: "50%", transform: "translateX(-50%)", zIndex: 6, background: "rgba(210,153,34,.95)", color: "#1a1200", fontWeight: 700, padding: "8px 18px", borderRadius: 10 }}>{toast}</div>}
 
-      <div style={{ position: "fixed", left: 22, bottom: 96, zIndex: 5, width: 320, maxWidth: "70vw", background: "rgba(16,18,28,.72)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 16, padding: 16 }}>
+      <div className="demo-ai" style={{ position: "fixed", left: 22, bottom: 96, zIndex: 5, width: 320, maxWidth: "70vw", background: "rgba(16,18,28,.72)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 16, padding: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 10 }}>
           <div style={{ width: 40, height: 40, borderRadius: "50%", background: "radial-gradient(circle at 30% 30%, #a48bff, #5a3fd6)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800 }}>AI</div>
           <div><div style={{ fontWeight: 700, fontSize: 14 }}>Aria — AI Interviewer</div><div style={{ fontSize: 12, opacity: .6 }}>Question 3 of 10</div></div>
@@ -128,7 +128,7 @@ export default function Home() {
       </div>
 
       {/* Per-feature control panel: enable + sensitivity for EVERY detector */}
-      <div style={{ position: "fixed", top: 62, right: 22, zIndex: 7, width: 300, background: "rgba(16,18,28,.92)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,.14)", borderRadius: 12, padding: 14, fontSize: 12.5, maxHeight: "82vh", overflowY: "auto" }}>
+      <div className="demo-panel" style={{ position: "fixed", top: 62, right: 22, zIndex: 7, width: 300, background: "rgba(16,18,28,.92)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,.14)", borderRadius: 12, padding: 14, fontSize: 12.5, maxHeight: "82vh", overflowY: "auto" }}>
         <div style={{ textTransform: "uppercase", letterSpacing: ".6px", opacity: .6, fontSize: 11, marginBottom: 8 }}>Detectors — enable + sensitivity</div>
         {FEATURES.map(({ key, label }) => (
           <div key={key} style={{ borderTop: "1px solid rgba(255,255,255,.08)", padding: "8px 0" }}>
