@@ -2,7 +2,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useProctorVision } from "@/hooks/use-proctor-vision";
 import { drawDebugOverlay } from "proctor-vision/ui";
-import type { ProctorConfig } from "proctor-vision";
+import type { ProctorConfig, ProctorReport } from "proctor-vision";
+import { ComplianceReport } from "@/components/ComplianceReport";
 
 const LABELS: Record<string, string> = {
   eyeGaze: "Eyes off screen", headMovement: "Head turned",
@@ -22,7 +23,8 @@ export default function Home() {
   // Per-feature enable + sensitivity (0..1, higher = more sensitive) — the uniform API.
   const [feat, setFeat] = useState<Record<FeatKey, { enabled: boolean; sensitivity: number }>>({
     faceDetection: { enabled: true, sensitivity: 0.5 },
-    eyeGaze: { enabled: true, sensitivity: 0.5 },
+    // Default eye-gaze sensitivity tuned to 0.80 (matches the ServdYou deployment).
+    eyeGaze: { enabled: true, sensitivity: 0.8 },
     headMovement: { enabled: true, sensitivity: 0.5 },
     multiplePerson: { enabled: true, sensitivity: 0.6 },
     device: { enabled: true, sensitivity: 0.7 },
@@ -65,13 +67,23 @@ export default function Home() {
     drawDebugOverlay(canvas, state, { mesh: true, boxes: true });
   }, [state, debug, videoRef]);
 
-  const download = () => {
-    const report = getReport();
-    if (!report) return;
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+  const [reportSnapshot, setReportSnapshot] = useState<ProctorReport | null>(null);
+
+  const download = (report?: ProctorReport) => {
+    const r = report ?? getReport();
+    if (!r) return;
+    const blob = new Blob([JSON.stringify(r, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob); a.download = `proctoring-report-${Date.now()}.json`; a.click();
     URL.revokeObjectURL(a.href);
+  };
+
+  // End the session: capture the report first, then stop, then surface the
+  // compliance summary. Additive — the live demo is otherwise unchanged.
+  const endSession = () => {
+    const r = getReport();
+    stop();
+    if (r) setReportSnapshot(r);
   };
 
   const setEnabled = (k: FeatKey, v: boolean) => setFeat((p) => ({ ...p, [k]: { ...p[k], enabled: v } }));
@@ -134,8 +146,8 @@ export default function Home() {
       )}
 
       <div style={{ position: "fixed", bottom: 26, left: "50%", transform: "translateX(-50%)", zIndex: 6, display: "flex", gap: 12 }}>
-        {!running ? <button onClick={start} style={btn("#7c5cff")}>Start interview</button> : <button onClick={stop} style={btn("#f85149")}>End</button>}
-        <button onClick={download} disabled={!running} style={btn("#30363d")}>Download report</button>
+        {!running ? <button onClick={start} style={btn("#7c5cff")}>Start interview</button> : <button onClick={endSession} style={btn("#f85149")}>End</button>}
+        <button onClick={() => download()} disabled={!running} style={btn("#30363d")}>Download report</button>
       </div>
 
       {/* Per-feature control panel: enable + sensitivity for EVERY detector */}
@@ -182,6 +194,15 @@ export default function Home() {
       )}
 
       {error && <div style={{ position: "fixed", bottom: 90, left: "50%", transform: "translateX(-50%)", zIndex: 8, background: "#f85149", color: "#fff", padding: "8px 16px", borderRadius: 8 }}>Camera error: {error}</div>}
+
+      {/* Post-session compliance report — the risk-intelligence layer on top of the raw SDK. */}
+      {reportSnapshot && (
+        <ComplianceReport
+          report={reportSnapshot}
+          onClose={() => setReportSnapshot(null)}
+          onDownload={() => download(reportSnapshot)}
+        />
+      )}
     </main>
   );
 }
